@@ -22,6 +22,8 @@ interface SidebarNavProps {
 }
 
 export function SidebarNav({ className }: SidebarNavProps) {
+  const postsFromState = usePostStore((state: any) => state.posts);
+  const setPosts = usePostStore((state: any) => state.action.setPosts);
   const postUpdate = usePostStore((state: any) => state.postUpdate)
   const onPostDelete = usePostStore((state: any) => state.onPostDelete)
   const reset = usePostStore((state: any) => state.reset)
@@ -40,14 +42,8 @@ export function SidebarNav({ className }: SidebarNavProps) {
   })
 
   
-  useEffect(() => {
-    setCollapsed(isMobile)
-  }, [isMobile])
-  
-  if (postUpdate) {
-    postRefetch();
-    reset();
-  }
+  useEffect(() => { setCollapsed(isMobile) }, [isMobile])
+  useEffect(() => { if (!isLoadingPosts) setPosts(posts) }, [isLoadingPosts, posts])
 
   return (
     <div
@@ -59,7 +55,9 @@ export function SidebarNav({ className }: SidebarNavProps) {
     >
       <div className="flex items-center justify-between p-4 border-b">
         {!collapsed && (
-          <h2 className="text-xl font-semibold">Blog</h2>
+          <Link  className="text-xl font-semibold" href={'/'}>
+            Blog
+          </Link>
         )}
         <Button
           variant="ghost"
@@ -118,7 +116,7 @@ export function SidebarNav({ className }: SidebarNavProps) {
             <div className="px-2 mb-2 text-xs uppercase text-muted-foreground">
               All Posts
             </div>
-            {!isLoadingPosts && posts.map((post: any) => (
+            {postsFromState.map((post: any) => (
               <div key={post.id} className="flex items-center justify-start gap-2">
                 <Button
                   

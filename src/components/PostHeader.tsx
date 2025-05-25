@@ -23,7 +23,7 @@ export function PostHeader({ post, className }: PostHeaderProps) {
             <div className="flex items-center text-sm text-muted-foreground mb-2">
             <span>{post.author}</span>
             <span className="mx-2">•</span>
-            <span>{new Date(post.date).toLocaleDateString('en-US', { 
+            <span>{new Date(Number(post.date)).toLocaleDateString('en-US', { 
                 year: 'numeric', 
                 month: 'long', 
                 day: 'numeric' 

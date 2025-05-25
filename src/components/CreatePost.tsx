@@ -9,7 +9,7 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -25,11 +25,13 @@ interface CreatePostProps {
 
 
 export function CreatePost({ className }: CreatePostProps) {
-    const onPostUpdate = usePostStore((state: any) => state.onPostUpdate)
+    // const onPostUpdate = usePostStore((state: any) => state.onPostUpdate)
+    const setPosts = usePostStore((state: any) => state.action.setPosts);
     const getPost = trpc.getPosts.useQuery();
     const addPost = trpc.addPost.useMutation({
-        onSettle: () => {
+        onSettled: () => {
             getPost.refetch();
+
         }
     })
     const form = useForm<z.infer<typeof formModel>>({
@@ -51,8 +53,19 @@ export function CreatePost({ className }: CreatePostProps) {
 
     const onSubmit = async (values: z.infer<typeof formModel>) => {
         await addPost.mutate(values);
-        onPostUpdate();
+        
+        // onPostUpdate();
     }
+    const onError = (values: any) => {
+        console.log(values);
+    }
+
+
+    useEffect(() => {
+        if (!getPost.isLoading) {
+            setPosts(getPost.data);
+        }
+    }, [getPost])
     return (
         <div className={cn('w-full', className)}>
             <Form {...form}>
@@ -90,7 +103,7 @@ export function CreatePost({ className }: CreatePostProps) {
                     </Button>
 
                 </div>
-                <form onSubmit={form.handleSubmit(onSubmit)} onChange={() => setDraft(form.getValues())} className="space-y-8">
+                <form onSubmit={form.handleSubmit(onSubmit, onError)} onChange={() => setDraft(form.getValues())} className="space-y-8">
                     <div className={cn(
                         "space-y-3",
                         activeTab === 'side-by-side' ? "flex gap-4" : ""
@@ -176,7 +189,7 @@ export function CreatePost({ className }: CreatePostProps) {
                         }
                     </div>
 
-                    <Button type="submit" onClick={() => {console.log('clickk'); form.handleSubmit((values) => { console.log(values)})}}>Submit</Button>
+                    <Button type="submit">Submit</Button>
                 </form>
                 
 
