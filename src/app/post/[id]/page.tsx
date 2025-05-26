@@ -5,7 +5,7 @@ export default async function Post(props: { params: { id: string } }) {
 
     console.log(id)
     return (
-        <div className="">
+        <div className="pb-14">
             <PostView id={id}/>
 
         </div>

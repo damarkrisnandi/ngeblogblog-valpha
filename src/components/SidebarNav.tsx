@@ -117,7 +117,10 @@ export function SidebarNav({ className }: SidebarNavProps) {
               All Posts
             </div>
             {postsFromState.map((post: any) => (
-              <div key={post.id} className="flex items-center justify-start gap-2">
+              <div key={post.id} className={cn(
+                "flex items-center justify-start gap-2",
+                
+              )}>
                 <Button
                   
                   variant="ghost"

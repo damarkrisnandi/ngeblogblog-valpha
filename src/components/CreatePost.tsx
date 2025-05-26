@@ -18,6 +18,9 @@ import { PostHeader } from "./PostHeader";
 import { formModel } from "@/models/form.model";
 import { trpc } from "@/trpc/client";
 import { usePostStore } from "@/stores/posts.store";
+import { rehypePlugins, remarkPlugin } from "@/lib/remark-plugin";
+import { Check, Loader2 } from "lucide-react";
+import { toast } from "sonner";
 
 interface CreatePostProps {
     className?: string;
@@ -30,6 +33,7 @@ export function CreatePost({ className }: CreatePostProps) {
     const getPost = trpc.getPosts.useQuery();
     const addPost = trpc.addPost.useMutation({
         onSettled: () => {
+            toast(`Post ${draft.title} Created!`)
             getPost.refetch();
 
         }
@@ -55,11 +59,20 @@ export function CreatePost({ className }: CreatePostProps) {
         await addPost.mutate(values);
         
         // onPostUpdate();
+        
     }
     const onError = (values: any) => {
         console.log(values);
+        toast(values)
     }
 
+    if (addPost.isError) {
+        toast(addPost.error)
+    }
+    if (addPost.isSuccess) {
+        
+        toast(`Post ${draft.title} Created!`)
+    }
 
     useEffect(() => {
         if (!getPost.isLoading) {
@@ -181,15 +194,18 @@ export function CreatePost({ className }: CreatePostProps) {
                             "space-y-3",
                             activeTab === 'side-by-side' ? "w-5/12" : ""
                         )}>
-                            <PostHeader post={draft} />
+                            <PostHeader post={draft as any} />
                             <article className="prose !max-w-full">
-                                <Markdown remarkPlugins={[remarkGfm]}>{draft.content}</Markdown>
+                                <Markdown remarkPlugins={remarkPlugin} rehypePlugins={rehypePlugins}>{draft.content}</Markdown>
                             </article>
                         </div>
                         }
                     </div>
 
-                    <Button type="submit">Submit</Button>
+                    <Button type="submit" disabled={addPost.isPending} className="flex item-center gap-2">
+                        {addPost.isPending && <Loader2 className="animate-spin w-3 h-3"/>}
+                        Submit
+                    </Button>
                 </form>
                 
 

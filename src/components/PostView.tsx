@@ -4,6 +4,7 @@ import { PostHeader } from "./PostHeader";
 import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Loader2 } from "lucide-react";
+import { rehypePlugins, remarkPlugin } from "@/lib/remark-plugin";
 
 interface PostViewProps {
     className?: string;
@@ -23,7 +24,7 @@ export function PostView({ className, id }: PostViewProps) {
                             <div>
                                 <PostHeader post={data[0]}/>
                                 <article className="prose !max-w-full">
-                                    <Markdown remarkPlugins={[remarkGfm]}>{data[0].content}</Markdown>
+                                    <Markdown remarkPlugins={remarkPlugin} rehypePlugins={rehypePlugins}>{data[0].content}</Markdown>
                                 </article>
                             </div>
                         ) : (
