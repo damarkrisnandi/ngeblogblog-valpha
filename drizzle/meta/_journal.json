@@ -57,6 +57,13 @@
       "when": 1747991073351,
       "tag": "0007_medical_scrambler",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "6",
+      "when": 1748251558828,
+      "tag": "0008_rare_cyclops",
+      "breakpoints": true
     }
   ]
 }

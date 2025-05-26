@@ -1,6 +1,6 @@
 // main features of trpc
 import { publicProcedure, router } from "./trpc";
-import db from "./drizzle";
+import db from "./drizzle-turso";
 import { post } from "@/schemas/post";
 import { category } from "@/schemas/category";
 import { formModel } from "@/models/form.model";

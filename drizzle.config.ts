@@ -6,6 +6,11 @@ export default defineConfig({
     driver: "d1-http",
     dialect: "sqlite",
     dbCredentials: {
-        url: "sqlite.db"
+        // for sqlitedb
+        // url: "sqlite.db",
+
+        // for tursodb
+        url: process.env.TURSO_DB_URL, 
+        authToken: process.env.TURSO_DB_AUTH_TOKEN 
     } 
 } as Config);
